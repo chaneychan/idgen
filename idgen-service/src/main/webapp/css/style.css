@@ -1,0 +1,36 @@
+.colmask {
+	position: relative;
+	clear: both;
+	width: 100%;
+	overflow: hidden;
+}
+.colright, .colmid, .colleft {
+	float: left;
+	width: 100%;
+	position: relative;
+}
+.col1, .col2, .col3 {
+	float: left;
+	position: relative;
+	overflow: hidden;
+}
+.threecol .colmid {
+	right: 20%;
+	
+}
+.threecol .colleft {
+	right: 60%;
+}
+.threecol .col1 {
+	width: 58%;
+	left: 101%;
+}
+
+.threecol .col2 {
+	width: 10%;
+	left: 23%;
+}
+.threecol .col3 {
+	width: 30%;
+	left: 75%;
+}

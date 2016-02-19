@@ -1,0 +1,13 @@
+idgen.zk.url={{_ .idgen_zk_url}}
+idgen.zk.retry.n={{_ .idgen_zk_retry_n}}
+idgen.zk.retry.time={{_ .idgen_zk_retry_time}}
+idgen.zk.auth={{_ .idgen_zk_auth}}
+
+huskar.url={{_ .ELE_HUSKAR_URL}}
+huskar.token={{_ .APP_HUSKAR_TOKEN}}
+trace.url={{_ .ELE_TRACE_URL}}
+statsd.url={{_ .ELE_STATSD_URL}}
+idgen.soa.threadPoolSize={{_ .idgen_soa_threadPoolSize}}
+idgen.soa.port={{_ .idgen_soa_port}}
+idgen.soa.queue.size={{_ .APP_QUEUE_SIZE}}
+group={{_ .APP_GROUP}}

@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+<title>Idgen-Console</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<link href='css/bootstrap.min.css' rel="stylesheet" />
+<link href='css/jquery-linedtextarea.css' rel="stylesheet" />
+<link href='css/style.css' rel="stylesheet" />
+</head>
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">idgen 控制台</a>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="colmask threecol">
+		<div class="colmid">
+			<div class="colleft">
+				<div class="col1">
+						<form id="nodeDataForm" method="post">
+						<textarea class="lined" rows="17" cols="60" name="nodeData"
+							placeholder="Enter JSONData" id=""></textarea>
+						<div class="list-group saveData"
+							style="margin-top: 10px; width: 60px; float: left">
+							<a href="#"  class="list-group-item active" id="saveDataBtn">保存</a>
+						</div>
+						<input type="hidden" name="path" id="path" >
+						</form>
+				</div>
+				<div class="col2">
+					<div class="list-group">
+					<a href="#" class="list-group-item active" id="policy">策略</a> 
+					<a href="#" class="list-group-item" id="rule">规则</a>
+					<a href="#" class="list-group-item" id="seq">序列</a>
+					</div>
+				</div>
+				<div class="col3">
+					<textarea class="demoLined" rows="28" cols="40" name="nodeData"
+							placeholder="Enter JSONData" id=""></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div >
+	</div>
+<script type="text/javascript" src="js/jquery.min.js" ></script>
+<script src="js/bootstrap.min.js" type="text/javascript" ></script>
+<script src="js/jquery-linedtextarea.js" type="text/javascript" ></script>
+<script src="js/jsformat.js" type="text/javascript" ></script>
+<script>
+$(function() {
+	$('.list-group-item').click(function(){
+		$(this).siblings().removeClass('active');
+		$(this).addClass("active");
+	});
+	var token = GetQueryString("token");
+	var url = "zk?token="+token+"&op=";
+	$(".lined").linedtextarea(
+	);
+	
+	var demoLined = '/***示例****//********************//***策略policy的示例***/';
+	var ruleDemo = '[{"db_max":200,"db_min":101,"db_pace":0,"hasdbtb":true,"ruleno":"1","seq_max":90609001,"seq_min":60609001,"seq_pace":0,"seqfirst":false,"tb_max":200,"tb_min":101,"tb_pace":0}]'
+	var policyDemo = '[{"ns":"n8","object":"t8","rulelist":"1"},{"ns":"n9","object":"t9","rulelist":"2"}]';
+	demoLined += policyDemo + "/***规则rule的示例***/" + ruleDemo;
+	$(".demoLined").html(do_js_beautify(demoLined));
+	$(".demoLined").linedtextarea(
+	);
+	
+	$('#policy').bind('click',function(){
+		$.get(url+"getPolicyList", function(result){
+			$(".lined").val(do_js_beautify(result));
+			$("#path").val("policy");
+			$(".saveData").show();
+		}); 
+	});
+	$('#rule').bind('click',function(){
+		$.get(url+"getRuleList", function(result){
+			$(".lined").val(do_js_beautify(result));
+			$("#path").val("rule");
+			$(".saveData").show();
+		}); 
+	});
+	$('#seq').bind('click',function(){
+		$.get(url+"getSeqList", function(result){
+			$(".lined").val(do_js_beautify(result));
+			$("#path").val("seq");
+			$(".saveData").hide();
+		});
+	});
+	
+	$('#saveDataBtn').bind('click',function(){
+		var requestString = '';
+		requestString += 'path=' + $("#path").val();
+		requestString += '&nodeData=' + $(".lined").val();
+		$.ajax({
+	         url : url+"saveData",
+	         type : 'post',
+	         dataType : 'json',
+	         data : requestString,
+	         success : function(msg) {
+	        	 if(msg.result == "true"){
+	        		 alert("操作成功");
+	        	 }else{
+	        		 alert("操作失败,请检查数据");
+	        	 }
+	         },
+	         error : function(msg) {
+	         }
+	     })
+	});
+});
+
+function do_js_beautify(str) {
+    js_source = str.replace(/^\s+/, '');
+    tabchar = ' ';
+    return js_beautify(js_source, 2, tabchar);
+}
+
+function GetQueryString(name){
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+</script>
+</body>
+</html>

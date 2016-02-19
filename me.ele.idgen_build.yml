@@ -1,0 +1,17 @@
+language: java
+version: oraclejdk8
+script:
+   - mvn dependency:tree  -f idgen-service/pom.xml -X
+   - echo "************************"
+   - echo "************************"
+   - mvn clean package -Dmaven.test.skip=true -f idgen-service/pom.xml -X
+after_success:
+   - chmod a+x deploy/ci_success.sh
+   - deploy/ci_success.sh
+outfile:
+   - release/
+notifications:
+   email:
+      - si.chen@ele.me
+branch:
+   test_1_0_1: alpha_stable

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pylon="http://ele.me/schema/pylon"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://ele.me/schema/pylon http://ele.me/schema/pylon/spring-pylon.xsd">
+
+	<context:property-placeholder location="classpath*:config.properties" />
+	
+	 
+	<bean id="idConfig" class="me.ele.idgen.common.IDConfig" />
+	<bean id="idgenService" class="me.ele.idgen.IDGenService2CuratorImpl" />
+
+	<pylon:common huskarUrl="${huskar.url}" huskarToken="${huskar.token}" traceUrl="${trace.url}" metricUrl="${statsd.url}"/>
+
+	<pylon:server name="idgen" protocol="json" group="${group}" port="${idgen.soa.port}" threadPoolSize="${idgen.soa.threadPoolSize}" bufferQueueSize="${idgen.soa.queue.size}"/>
+
+	<pylon:service class="me.ele.idgen.client.IDGenService" ref="idgenService" />
+
+</beans>

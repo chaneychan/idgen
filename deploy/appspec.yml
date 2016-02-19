@@ -1,0 +1,9 @@
+appid: me.ele.idgen
+version: 1.0.0
+os: linux
+language: java
+apptype: web
+hooks:
+  ValidateService:
+    - location: sh ./validate.sh
+      timeout: 60
