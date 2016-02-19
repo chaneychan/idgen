@@ -10,4 +10,4 @@ Introduction
    
    2)   client have to butt soa
    
-   3)   examples are the following address: git@git.elenet.me:IPD/idgen-sample.git
+   3)   examples are the following address: git@github.com:chaneychan/idgen-sample.git
