@@ -5,7 +5,9 @@ Introduction
    The use sample of idgen  is thus like the following :
     
    1)  	ApplicationContext context = new ClassPathXmlApplicationContext("classpath:client.xml");
+
 	   	MemIDPool idPool = context.getBean(MemIDPool.class);
+	   	
 	  	String id = idPool.borrow();
    
    2)   client have to butt soa
