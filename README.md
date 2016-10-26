@@ -11,3 +11,12 @@ Introduction
    2)   client have to butt soa
    
    3)   examples are the following address: git@github.com:chaneychan/idgen-sample.git
+
+
+时序图：
+
+![image](https://github.com/chaneychan/idgen/blob/master/doc/Sequence--idgen.png)
+
+zk数据结构：
+
+![image](https://github.com/chaneychan/idgen/blob/master/doc/zk%20root.png)
