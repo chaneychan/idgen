@@ -6,17 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
-import me.ele.idgen.model.Policy;
-import me.ele.idgen.model.Rule;
-
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Id;
 import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.server.auth.DigestAuthenticationProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -26,8 +23,11 @@ import com.netflix.curator.framework.CuratorFramework;
 import com.netflix.curator.framework.api.CuratorEvent;
 import com.netflix.curator.framework.api.CuratorListener;
 
+import me.ele.idgen.model.Policy;
+import me.ele.idgen.model.Rule;
+
 public class IDConfig {
-	private static final Log logger = LogFactory.getLog(IDConfig.class);
+	private static final Logger logger = LoggerFactory.getLogger(IDConfig.class);
 	private static CuratorFramework client = CuratorClient.getClient();
 	public static final String root = "/idgen";
 	public static final String policyroot = "/idgen/policy";

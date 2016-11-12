@@ -8,8 +8,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Description: id池
@@ -17,7 +17,7 @@ import me.ele.elog.LogFactory;
  * @date 2015年9月11日
  */
 public class MemIDPool implements IDPool {
-	private static final Log Log = LogFactory.getLog(MemIDPool.class);
+	private static final Logger Log = LoggerFactory.getLogger(MemIDPool.class);
 	/** 生成接口 **/
 	private IDGenService globalIdGenerator;
 	/** 并发队列 **/

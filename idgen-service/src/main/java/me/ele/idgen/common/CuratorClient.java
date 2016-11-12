@@ -2,9 +2,8 @@ package me.ele.idgen.common;
 
 import java.util.Properties;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -19,7 +18,7 @@ import com.netflix.curator.retry.RetryNTimes;
 
 public class CuratorClient {
 
-	private static final Log logger = LogFactory.getLog(CuratorClient.class);
+	private static final Logger logger = LoggerFactory.getLogger(CuratorClient.class);
 	private static String ZKURL;
 	private static String RETRYN;
 	private static String RETRYTIME;

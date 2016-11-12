@@ -140,31 +140,14 @@
 		</encoder>
 	</appender>
 
-	<appender name="SYSLOG" class="me.ele.elog.appender.SyslogAppender">
-		<syslogHost>localhost</syslogHost>
-		<facility>LOCAL6</facility>
-	</appender>
-
-	<appender name="ASYNC" class="me.ele.elog.appender.AsyncAppender">
-		<buffer size="2048" />
-		<appender-ref ref="SYSLOG" />
-		<appender-ref ref="STDOUT" />
-		<appender-ref ref="ERROR" />
-		<appender-ref ref="DEBUG" />
-		<appender-ref ref="INFO" />
-	</appender>
-
-	<root level="INFO">
-		<appender-ref ref="ASYNC" />
-	</root>
+    <root>
+        <level value="DEBUG" />
+        <appender-ref ref="INFO" />
+        <appender-ref ref="ERROR"/>
+    </root>
 
 	<logger name="cfg" level="INFO" additivity="false">
 		<appender-ref ref="cfg" />
-	</logger>
-
-
-	<logger name="me.ele.idgen.support" level="INFO" additivity="false">
-		<appender-ref ref="CONSOLE" />
 	</logger>
 
 	<!-- <buffer size="2048" /> -->

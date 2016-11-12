@@ -9,9 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
-
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
@@ -19,9 +16,11 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DistributedLock implements Lock, Watcher {
-	private static final Log logger = LogFactory.getLog(DistributedLock.class);
+	private static final Logger logger = LoggerFactory.getLogger(DistributedLock.class);
 	private ZooKeeper zk;
 	private String root = "/locks";
 	private String lockName;

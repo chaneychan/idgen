@@ -2,8 +2,13 @@ package me.ele.idgen;
 
 import java.util.concurrent.TimeUnit;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSON;
+import com.netflix.curator.framework.CuratorFramework;
+import com.netflix.curator.framework.recipes.locks.InterProcessMutex;
+
 import me.ele.idgen.client.IDGenService;
 import me.ele.idgen.common.Constant;
 import me.ele.idgen.common.CuratorClient;
@@ -11,12 +16,8 @@ import me.ele.idgen.common.IDConfig;
 import me.ele.idgen.common.IDUtil;
 import me.ele.idgen.model.Seq;
 
-import com.alibaba.fastjson.JSON;
-import com.netflix.curator.framework.CuratorFramework;
-import com.netflix.curator.framework.recipes.locks.InterProcessMutex;
-
 public class IDGenService2CuratorImpl implements IDGenService {
-	private static final Log logger = LogFactory.getLog(IDGenService2CuratorImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(IDGenService2CuratorImpl.class);
 	private static CuratorFramework client = CuratorClient.getClient();
 
 	public String getOnePolicyNextId(String ns, String object, Seq seq, String newrule) {

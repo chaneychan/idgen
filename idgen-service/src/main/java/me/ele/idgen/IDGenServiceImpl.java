@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
-import me.ele.idgen.client.IDGenService;
-import me.ele.idgen.lock.DistributedLock;
-
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
@@ -16,9 +11,14 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import me.ele.idgen.client.IDGenService;
+import me.ele.idgen.lock.DistributedLock;
 
 public class IDGenServiceImpl implements IDGenService, Watcher {
-	private static final Log logger = LogFactory.getLog(IDGenServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(IDGenServiceImpl.class);
 	private String root;
 	private String seqName;
 	private int sessionTimeout;
@@ -61,7 +61,8 @@ public class IDGenServiceImpl implements IDGenService, Watcher {
 			logger.info(Thread.currentThread().getId() + "|" + namespace + "|" + table + "|" + quantity + "|get lock");
 			ret = getNextIdImpl(namespace, table, quantity);
 
-			logger.info(Thread.currentThread().getId() + "|" + namespace + "|" + table + "|" + quantity + "|return:" + ret);
+			logger.info(
+					Thread.currentThread().getId() + "|" + namespace + "|" + table + "|" + quantity + "|return:" + ret);
 		} catch (Exception e) {
 			ret = "Error message:[" + namespace + "|" + table + "|" + quantity + "]" + e.getMessage();
 
@@ -82,7 +83,8 @@ public class IDGenServiceImpl implements IDGenService, Watcher {
 		return String.valueOf(nextValue);
 	}
 
-	public String getNextIdImpl(String namespace, String table, int quantity) throws InterruptedException, KeeperException {
+	public String getNextIdImpl(String namespace, String table, int quantity)
+			throws InterruptedException, KeeperException {
 		String ret = "Error message:unknown exception";
 		System.out.println("come in:" + Thread.currentThread().getId());
 		Thread.sleep(10000L);
@@ -94,13 +96,15 @@ public class IDGenServiceImpl implements IDGenService, Watcher {
 		}
 		Stat stat1 = getZk().exists(this.root + "/" + namespace, false);
 		if (stat1 == null) {
-			getZk().create(this.root + "/" + namespace, new String("1").getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			getZk().create(this.root + "/" + namespace, new String("1").getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE,
+					CreateMode.PERSISTENT);
 		}
 
 		Stat stat = getZk().exists(this.root + "/" + namespace + "/" + table, false);
 		String seq = "1";
 		if (stat == null) {
-			getZk().create(this.root + "/" + namespace + "/" + table, new String("1").getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			getZk().create(this.root + "/" + namespace + "/" + table, new String("1").getBytes(),
+					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
 			ret = seq;
 			for (int i = 0; i < quantity - 1; ++i) {

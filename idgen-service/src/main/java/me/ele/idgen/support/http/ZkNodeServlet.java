@@ -9,14 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
-import me.ele.idgen.common.CuratorClient;
-import me.ele.idgen.common.IDConfig;
-import me.ele.idgen.model.Policy;
-import me.ele.idgen.model.Rule;
-import me.ele.idgen.model.Seq;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
@@ -24,11 +16,19 @@ import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Id;
 import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.server.auth.DigestAuthenticationProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.netflix.curator.framework.CuratorFramework;
+
+import me.ele.idgen.common.CuratorClient;
+import me.ele.idgen.common.IDConfig;
+import me.ele.idgen.model.Policy;
+import me.ele.idgen.model.Rule;
+import me.ele.idgen.model.Seq;
 
 /**
  * @Description: zk节点控制
@@ -39,7 +39,7 @@ public class ZkNodeServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -4327666335341895490L;
 	
-	private static final Log log = LogFactory.getLog(ZkNodeServlet.class);
+	private static final Logger logger = LoggerFactory.getLogger(ZkNodeServlet.class);
 	
 	
 	private static final String OP_POLICY_LIST= "getPolicyList";
@@ -54,14 +54,14 @@ public class ZkNodeServlet extends HttpServlet {
 		if(!UserToken.checkUserToken(token)){
 			return ;
 		}
-		log.info("op:{}",op);
+		logger.info("op:{}",op);
 		CuratorFramework client = CuratorClient.getClient();
 		if(OP_POLICY_LIST.equalsIgnoreCase(op)){
 			byte[] c = null;
 			try {
 				c = (byte[]) client.getData().forPath(IDConfig.policyroot);
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				logger.error(e.getMessage());
 			}
 			response.getWriter().println(new String(c));
 		}else if(OP_RULE_LIST.equalsIgnoreCase(op)){
@@ -69,7 +69,7 @@ public class ZkNodeServlet extends HttpServlet {
 			try {
 				c = (byte[]) client.getData().forPath(IDConfig.ruleroot);
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				logger.error(e.getMessage());
 			}
 			response.getWriter().println(new String(c));
 		}else if(OP_SEQ_LIST.equalsIgnoreCase(op)){
@@ -89,7 +89,7 @@ public class ZkNodeServlet extends HttpServlet {
 					}
 				}
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				logger.error(e.getMessage());
 			}
 			
 			if(CollectionUtils.isEmpty(seqList)){
@@ -103,7 +103,7 @@ public class ZkNodeServlet extends HttpServlet {
 			response.setContentType("application/json");
 			String path = StringUtils.defaultIfEmpty(request.getParameter("path"),"").trim();
 			String nodeData = StringUtils.defaultIfEmpty(request.getParameter("nodeData"),"").trim();
-			log.info("path:{},nodeData:{}",path,nodeData);
+			logger.info("path:{},nodeData:{}",path,nodeData);
 			JSONObject resObj  = checkNodeData(path,nodeData);
 			if(resObj == null || resObj.getString("result").equals("false")){
 				response.getWriter().println(resObj);
@@ -138,7 +138,7 @@ public class ZkNodeServlet extends HttpServlet {
 					client.setData().forPath(idgenPath, nodeData.getBytes());
 				}
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				logger.error(e.getMessage());
 				resObj.put("result","false");
 				resObj.put("data","error request data");
 				response.getWriter().println(resObj);
@@ -147,7 +147,7 @@ public class ZkNodeServlet extends HttpServlet {
 			response.getWriter().println(resObj);
 			return;
 		}else{
-			log.error("error: {}" ,"操作类型不对");
+			logger.error("error: {}" ,"操作类型不对");
 		}
 	}
 	

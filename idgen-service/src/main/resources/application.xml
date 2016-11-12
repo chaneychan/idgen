@@ -4,19 +4,32 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-            http://ele.me/schema/pylon http://ele.me/schema/pylon/spring-pylon.xsd">
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 	<context:property-placeholder location="classpath*:config.properties" />
 	
 	 
 	<bean id="idConfig" class="me.ele.idgen.common.IDConfig" />
 	<bean id="idgenService" class="me.ele.idgen.IDGenService2CuratorImpl" />
+	
+	<bean id="exportedDepotOrderService" class="com.alibaba.dubbo.config.spring.ServiceBean">
+        <property name="interface" value="me.ele.idgen.clien.IDGenService"/>
+        <property name="ref" ref="idgenService"/>
+        <property name="application" ref="dubboApplicationConfig"/>
+        <property name="registry" ref="dubboRegistryConfig"/>
+        <property name="version" value="${dubbo.export.version.idgen}"/>
+    </bean>
 
-	<pylon:common huskarUrl="${huskar.url}" huskarToken="${huskar.token}" traceUrl="${trace.url}" metricUrl="${statsd.url}"/>
+	<bean id="dubboApplicationConfig" class="com.alibaba.dubbo.config.ApplicationConfig">
+        <property name="name" value="idgen"/>
+    </bean>
 
-	<pylon:server name="idgen" protocol="json" group="${group}" port="${idgen.soa.port}" threadPoolSize="${idgen.soa.threadPoolSize}" bufferQueueSize="${idgen.soa.queue.size}"/>
+    <bean id="dubboRegistryConfig" class="com.alibaba.dubbo.config.RegistryConfig">
+        <property name="address" value="${dubbo.registry.url}"/>
+        <property name="protocol" value="zookeeper"/>
+    </bean>
 
-	<pylon:service class="me.ele.idgen.client.IDGenService" ref="idgenService" />
-
+    <bean id="dubboProtocolConfig" class="com.alibaba.dubbo.config.ProtocolConfig">
+        <property name="port" value="${dubbo.port}"/>
+    </bean>
 </beans>

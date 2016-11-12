@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
-import me.ele.idgen.client.IDGenService;
-
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.netflix.curator.RetryPolicy;
@@ -21,8 +19,10 @@ import com.netflix.curator.framework.state.ConnectionState;
 import com.netflix.curator.framework.state.ConnectionStateListener;
 import com.netflix.curator.retry.RetryNTimes;
 
+import me.ele.idgen.client.IDGenService;
+
 public class IDGenServiceCuratorImpl implements IDGenService {
-	private static final Log logger = LogFactory.getLog(IDGenServiceCuratorImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(IDGenServiceCuratorImpl.class);
 	private static String root = "/seq";
 	private static String lockroot = "/locks";
 	private int JISHU;

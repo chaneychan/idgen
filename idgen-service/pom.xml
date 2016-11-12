@@ -10,10 +10,6 @@
 	<packaging>war</packaging>
 	<dependencies>
         <dependency>
-            <groupId>eleme-jarch</groupId>
-            <artifactId>pylon-spring</artifactId>
-        </dependency> 
-        <dependency>
 			<groupId>me.ele.idgen</groupId>
 			<artifactId>idgen-client</artifactId>
 		</dependency>

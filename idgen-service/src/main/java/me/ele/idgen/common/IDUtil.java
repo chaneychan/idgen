@@ -3,26 +3,24 @@ package me.ele.idgen.common;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
-import me.ele.idgen.model.Policy;
-import me.ele.idgen.model.Rule;
-import me.ele.idgen.model.Seq;
-import me.ele.metrics.statsd.MetricClient;
-
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.netflix.curator.framework.CuratorFramework;
 
+import me.ele.idgen.model.Policy;
+import me.ele.idgen.model.Rule;
+import me.ele.idgen.model.Seq;
+
 public class IDUtil {
 
-	private static final Log logger = LogFactory.getLog(IDUtil.class);
-	private static final Log cfgLogger = LogFactory.getLog("cfg");
+	private static final Logger logger = LoggerFactory.getLogger(IDUtil.class);
+	private static final Logger cfgLogger = LoggerFactory.getLogger("cfg");
 	private static CuratorFramework client = CuratorClient.getClient();
 	private static int USABLE_LIMIT = Integer.valueOf(System.getProperty("USABLE_LIMIT", "100000")).intValue();
-	private static MetricClient metricClient = new MetricClient();
 
 	public static Policy getPolicyById(String id) {
 		return ((Policy) IDConfig.policyMap.get(id));
@@ -74,8 +72,8 @@ public class IDUtil {
 			seq.setTb(rule.getTb_min());
 			seq.setSeq(rule.getSeq_min());
 			seq.setRule(rule.getRuleno());
-			client.create().withMode(CreateMode.PERSISTENT)
-					.forPath(IDConfig.seqroot + "/" + namespace + "/" + table, JSON.toJSONString(seq).getBytes());
+			client.create().withMode(CreateMode.PERSISTENT).forPath(IDConfig.seqroot + "/" + namespace + "/" + table,
+					JSON.toJSONString(seq).getBytes());
 			ret = seq;
 		} else {
 			byte[] b = (byte[]) client.getData().forPath(IDConfig.seqroot + "/" + namespace + "/" + table);
@@ -110,7 +108,8 @@ public class IDUtil {
 
 			if ((seql - 1L > rule.getSeq_max()) || (seql - 1L < 0L)) {
 				seq = switchRule(ns, object, currentSeq, (int) (quantity - (seql - 1L - rule.getSeq_max())));
-				logger.warn("switch rule:" + ns + "|" + object + ",from:" + currentSeq.toString() + " to:" + seq.toString());
+				logger.warn("switch rule:" + ns + "|" + object + ",from:" + currentSeq.toString() + " to:"
+						+ seq.toString());
 				Map<String, String> mmap = new HashMap<String, String>();
 				mmap.put("me.ele.idgen.KV_ITEM_KEY", "idgen-switchrule");
 				mmap.put("namespace", ns);
@@ -119,14 +118,15 @@ public class IDUtil {
 				mmap.put("newrule", seq.getRule());
 				logger.info(JSON.toJSONString(mmap));
 			} else {
-				long usable = rule.getSeq_max() - seql + 1L + (rule.getDb_max() - dbi) * (rule.getTb_max() - tbi) * rule.getSeq_pace();
+				long usable = rule.getSeq_max() - seql + 1L
+						+ (rule.getDb_max() - dbi) * (rule.getTb_max() - tbi) * rule.getSeq_pace();
 				if (usable < USABLE_LIMIT) {
 					Map<String, String> mmap = new HashMap<String, String>();
 					mmap.put("namespace", ns);
 					mmap.put("table", object);
 					mmap.put("usable", String.valueOf(usable));
 					logger.info(JSON.toJSONString(mmap));
-					metricClient.name(Constant.M_IDGEN_USABLE_LIMIT,ns,object).recordGaugeValue(usable);
+					// metricClient.name(Constant.M_IDGEN_USABLE_LIMIT,ns,object).recordGaugeValue(usable);
 					// MetricUtil.writeCountMetric(Constant.M_IDGEN_USABLE_LIMIT,
 					// usable, mmap);
 				}
@@ -139,7 +139,8 @@ public class IDUtil {
 			long seql = currentSeq.getSeq() + quantity;
 			if ((seql - 1L > rule.getSeq_max()) || (seql - 1L < 0L)) {
 				seq = switchRule(ns, object, currentSeq, (int) (seql - 1L - rule.getSeq_max()));
-				logger.warn("switch rule:" + ns + "|" + object + ",from:" + currentSeq.toString() + " to:" + seq.toString());
+				logger.warn("switch rule:" + ns + "|" + object + ",from:" + currentSeq.toString() + " to:"
+						+ seq.toString());
 				Map<String, Object> mmap = new HashMap<String, Object>();
 				mmap.put("me.ele.idgen.KV_ITEM_KEY", "idgen-switchrule");
 				mmap.put("namespace", ns);
@@ -156,7 +157,8 @@ public class IDUtil {
 					mmap.put("table", object);
 					mmap.put("usable", String.valueOf(usable));
 					logger.info(JSON.toJSONString(mmap));
-					metricClient.name(Constant.M_IDGEN_USABLE_LIMIT,ns,object).recordGaugeValue(usable);
+					// metricClient.name(Constant.M_IDGEN_USABLE_LIMIT, ns,
+					// object).recordGaugeValue(usable);
 					// MetricUtil.writeCountMetric(Constant.M_IDGEN_USABLE_LIMIT,
 					// usable, mmap);
 				}
@@ -206,9 +208,11 @@ public class IDUtil {
 		if (!(rule.isHasdbtb()))
 			return String.valueOf(seq);
 		if (rule.isSeqfirst()) {
-			return String.format("%d%02d%02d", new Object[] { Long.valueOf(seq), Integer.valueOf(db), Integer.valueOf(tb) });
+			return String.format("%d%02d%02d",
+					new Object[] { Long.valueOf(seq), Integer.valueOf(db), Integer.valueOf(tb) });
 		}
-		return String.format("%02d%02d%d", new Object[] { Integer.valueOf(db), Integer.valueOf(tb), Long.valueOf(seq) });
+		return String.format("%02d%02d%d",
+				new Object[] { Integer.valueOf(db), Integer.valueOf(tb), Long.valueOf(seq) });
 	}
 
 	public static void monitorNotifyError(String msg, Exception e) {
@@ -228,8 +232,8 @@ public class IDUtil {
 		// MetricUtil.writeCountMetric(Constant.M_IDGEN_MONITOR_CFG_C, 1);
 	}
 
-	public static void monitor(String namespace, String object, int quantity, long tStart, long tWaitLockStart, long tWaitLockEnd, long tEnd,
-			long lockClients, String result) {
+	public static void monitor(String namespace, String object, int quantity, long tStart, long tWaitLockStart,
+			long tWaitLockEnd, long tEnd, long lockClients, String result) {
 		Map<String, String> mmap = new HashMap<String, String>();
 		mmap.put("timestamp", String.valueOf(tStart));
 		mmap.put("spent_time", String.valueOf(tEnd - tStart));
@@ -244,10 +248,11 @@ public class IDUtil {
 		mmap.put("object", object);
 		mmap.put("quantity", String.valueOf(quantity));
 		logger.info(JSON.toJSONString(mmap));
-		metricClient.name(Constant.M_IDGEN_MONITOR_GETNEXTID_T).recordTimeInMillis(tEnd - tStart);
+		// metricClient.name(Constant.M_IDGEN_MONITOR_GETNEXTID_T).recordTimeInMillis(tEnd
+		// - tStart);
 		// MetricUtil.writeTimingMetric(Constant.M_IDGEN_MONITOR_GETNEXTID_T,
 		// Double.valueOf(tEnd - tStart), mmap);
-		
+
 		// 暂时不需要统计以下两个Count
 		// MetricUtil.writeCountMetric(Constant.M_IDGEN_MONITOR_GETNEXTID_C, 1);
 		// MetricUtil.writeCountMetric(Constant.M_IDGEN_MONITOR_GETNEXTID_NUM_C,

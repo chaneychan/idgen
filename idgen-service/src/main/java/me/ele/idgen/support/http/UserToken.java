@@ -1,11 +1,11 @@
 package me.ele.idgen.support.http;
 
-import me.ele.elog.Log;
-import me.ele.elog.LogFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import me.ele.idgen.support.utils.AESCoder;
 import me.ele.idgen.support.utils.Coder;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * 生成user的token
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class UserToken {
 
-	private static Log log = LogFactory.getLog(UserToken.class);
+	private static Logger logger = LoggerFactory.getLogger(UserToken.class);
 	private final static String SPLITSTR = "#";
 	private final static String USERNAME = "admin";
 	private final static String PWD = "eleme789";
@@ -30,7 +30,7 @@ public class UserToken {
 	
 	
 	public static String getUserToken(String userName,String pwd){
-		log.info("getUserToken: userName: {}, password: {}" ,userName,pwd);
+		logger.info("getUserToken: userName: {}, password: {}" ,userName,pwd);
 		StringBuffer sb = new StringBuffer();
 		sb.append(userName);
 		sb.append(SPLITSTR);
@@ -58,7 +58,7 @@ public class UserToken {
 				}
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			logger.error(e.getMessage());
 			return false;
 		}
 		return false;

@@ -3,11 +3,11 @@ package me.ele.idgen.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.ele.elog.LogFactory;
-import me.ele.elog.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MockIDGenerator implements IDGenService {
-	private static final Log log = LogFactory.getLog(MockIDGenerator.class);
+	private static final Logger log = LoggerFactory.getLogger(MockIDGenerator.class);
 	private Long idGenerator;
 
 	public MockIDGenerator() {

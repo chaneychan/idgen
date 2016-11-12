@@ -7,16 +7,19 @@
 		<version>1.0.5-RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	
+
 	<artifactId>idgen-client</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<dependencies>
-            <dependency>
-                <groupId>eleme-jarch</groupId>
-                <artifactId>utility-elog</artifactId>
-                <version>3.0.2</version>
-            </dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>idgen-client</finalName>
@@ -46,8 +49,8 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 					<showWarnings>true</showWarnings>
 					<compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
