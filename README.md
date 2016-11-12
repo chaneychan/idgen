@@ -13,6 +13,7 @@ Introduction
    3)   examples are the following address: git@github.com:chaneychan/idgen-sample.git
 
 
-架构概览：
-
 ![image](https://github.com/chaneychan/idgen/blob/master/doc/%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80id--%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%881.png)
+![image](https://github.com/chaneychan/idgen/blob/master/doc/%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80id--%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%882.png)
+![image](https://github.com/chaneychan/idgen/blob/master/doc/%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80id--%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%883.png)
+![image](https://github.com/chaneychan/idgen/blob/master/doc/%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80id--%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%884.png)
